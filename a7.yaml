@@ -1,0 +1,37 @@
+openapi: 3.0.3
+info:
+  title: Seat Reservation API
+  version: 1.0.0
+  description: Lets a customer view seats for a showtime, hold seats during checkout, and cancel a hold.
+paths:
+  /showtimes/{showtimeId}/seats:
+    get:
+      summary: Get seats for a showtime
+      parameters:
+        - {name: showtimeId, in: path, required: true, schema: {type: string}}
+      responses:
+        '200': {description: Seats returned}
+        '404': {description: Showtime not found/available}
+  /reservations:
+    post:
+      summary: Hold seats
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                showtimeId: {type: string}
+                seatIds: {type: array, items: {type: string}}
+                ticket: {type: string}
+      responses:
+        '201': {description: Seats held}
+        '409': {description: Seat already taken}
+  /reservations/{id}:
+    delete:
+      summary: Cancel a hold
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      responses:
+        '204': {description: Cancelled}
+        '404': {description: Not found}
+        '409': {description: Already paid}
